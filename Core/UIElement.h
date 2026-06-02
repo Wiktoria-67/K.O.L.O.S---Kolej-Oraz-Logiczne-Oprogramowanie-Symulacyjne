@@ -1,4 +1,5 @@
 #pragma once
+#include <SFML/Graphics.hpp>
 #include "IDrawable.h"
 #include "IClickable.h"
 #include "SharedTypes.h"
@@ -11,7 +12,7 @@ namespace Core {
         int height;
     public:
         virtual ~UIElement() = default;
-        void draw() override = 0;
+        void draw(sf::RenderWindow& window) override = 0; // <-- TUTAJ zmiana
         bool onClick(int mouseX, int mouseY) override = 0;
     };
 }

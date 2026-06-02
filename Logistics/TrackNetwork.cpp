@@ -12,17 +12,15 @@ namespace Logistics {
     }
 
     void TrackNetwork::calculateRoutes() {
-        // W przyszłości: wywołanie algorytmu wyznaczania tras po grafie
+        // W przyszłości: wywołanie algorytmu wyznaczania tras
         std::cout << "[TrackNetwork] Przeliczanie tras dla " 
                   << activeTrains.size() << " aktywnych pociagow...\n";
     }
 
     bool TrackNetwork::checkCollisions() {
-        // Naiwny algorytm sprawdzania kolizji na potrzeby początkowych testów integracyjnych
         for (size_t i = 0; i < activeTrains.size(); ++i) {
             for (size_t j = i + 1; j < activeTrains.size(); ++j) {
-                
-                // Zmienna testowa - docelowo będziecie tu sprawdzać współrzędne X,Y obiektów
+
                 bool collisionDetected = false; 
 
                 if (collisionDetected) {
@@ -33,4 +31,4 @@ namespace Logistics {
         return false;
     }
 
-} // namespace Logistics
+}

@@ -8,4 +8,4 @@ namespace Logistics {
         LargeTrain();
     };
 
-} // namespace Logistics
+}

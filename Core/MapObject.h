@@ -8,10 +8,9 @@ namespace Core {
         Point2D position;
     public:
         virtual ~MapObject() = default;
-        void draw() override = 0; 
+        void draw(sf::RenderWindow& window) override = 0;
         virtual void update() = 0;
 
-        // --- NOWE: Gettery i Settery ---
         void setPosition(Point2D pos) { position = pos; }
         Point2D getPosition() const { return position; }
     };

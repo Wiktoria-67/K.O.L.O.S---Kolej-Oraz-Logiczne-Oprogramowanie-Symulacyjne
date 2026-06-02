@@ -10,4 +10,4 @@ namespace Industry {
         // Logika dodania nowej jednostki węgla do bufora wyjściowego kopalni
     }
 
-} // namespace Industry
+}

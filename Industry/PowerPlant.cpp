@@ -19,4 +19,4 @@ namespace Industry {
         // Tutaj logika np. dodawania globalnych punktów energii
     }
 
-} // namespace Industry
+}

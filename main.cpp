@@ -1,71 +1,106 @@
 #include <iostream>
-#include <exception>
+#include <vector>
 #include <memory>
-#include "Core/SimulationEngine.h"
-#include "Core/RenderException.h"
+#include <optional>
+#include <SFML/Graphics.hpp>
+
+#include "Core/Renderer.h"
+#include "Core/Button.h"
+#include "Core/IDrawable.h"
+#include "Core/MapObject.h"
 #include "Industry/CoalMine.h"
 #include "Industry/SteelMill.h"
-#include "Logistics/SmallTrain.h"
-#include "Logistics/Route.h"
 
-// Użycie standardowej przestrzeni nazw dla całego pliku main.cpp
-using namespace std;
+enum class BuildMode {
+    None,
+    Mine,
+    Factory
+};
 
 int main() {
-    cout << "========================================\n";
-    cout << "  K.O.L.O.S. - Start Systemu (Etap 0)   \n";
-    cout << "========================================\n";
+    std::cout << "==================================================\n";
+    std::cout << "   K.O.L.O.S. - Edytor Mapy \n";
+    std::cout << "==================================================\n\n";
 
-    try {
-        Core::SimulationEngine engine;
+    // 1. Inicjalizacja okna graficznego przez Renderer
+    Core::Renderer renderer;
+    renderer.initWindow();
 
-        // 1. TWORZENIE OBIEKTÓW PRZEMYSŁOWYCH
-        auto coalMine = make_unique<Industry::CoalMine>();
-        coalMine->setPosition({0, 0}); 
-        cout << "[Inicjalizacja] Kopalnia Wegla stoi na X: " 
-             << coalMine->getPosition().x << ", Y: " << coalMine->getPosition().y << "\n";
+    // Pobieramy referencję do okna, żeby nasza pętla mogła z niego czytać eventy
+    sf::RenderWindow& window = renderer.getWindow();
 
-        auto steelMill = make_unique<Industry::SteelMill>();
-        steelMill->setPosition({40, 30}); 
-        cout << "[Inicjalizacja] Huta (SteelMill) stoi na X: " 
-             << steelMill->getPosition().x << ", Y: " << steelMill->getPosition().y << "\n";
+    // Przygotowanie paska bocznego
+    sf::RectangleShape sidebarPanel({200.f, 600.f});
+    sidebarPanel.setFillColor(sf::Color(60, 60, 60));
 
-        // 2. TWORZENIE POCIĄGU I JEGO TRASY JAKO OBIEKTU
-        auto train = make_unique<Logistics::SmallTrain>();
+    std::vector<std::unique_ptr<Core::Button>> guiButtons;
+    std::vector<std::unique_ptr<Core::MapObject>> mapObjects;
+
+    guiButtons.push_back(std::make_unique<Core::Button>(20, 50, 160, 40, sf::Color(180, 70, 70)));   // Kopalnia
+    guiButtons.push_back(std::make_unique<Core::Button>(20, 110, 160, 40, sf::Color(70, 70, 180)));  // Huta
+
+    BuildMode currentBuildMode = BuildMode::None;
+
+    // Główna pętla programu
+    while (window.isOpen()) {
         
-        Logistics::Route trainRoute{
-            coalMine->getPosition(), // Węzeł 1: Kopalnia
-            {40, 0},                 // Węzeł 2: Zakręt
-            steelMill->getPosition() // Węzeł 3: Huta
-        };
-        train->setRoute(trainRoute);
+        // Obsługa zdarzeń
+        while (const std::optional event = window.pollEvent()) {
+            if (event->is<sf::Event::Closed>()) {
+                window.close();
+            }
 
-        // 3. WSTRZYKIWANIE ZALEŻNOŚCI DO SILNIKA (DI)
-        engine.addMapObject(std::move(coalMine));
-        engine.addMapObject(std::move(steelMill));
-        engine.addMapObject(std::move(train));
+            if (const auto* mousePressed = event->getIf<sf::Event::MouseButtonPressed>()) {
+                if (mousePressed->button == sf::Mouse::Button::Left) {
+                    int mx = mousePressed->position.x;
+                    int my = mousePressed->position.y;
 
-        // 4. URUCHOMIENIE SYMULACJI
-        engine.startSimulation();
-        
-        cout << "\n--- ROZPOCZECIE PETLI TESTOWEJ (45 TICKOW) ---\n";
-        for (int i = 1; i <= 10; ++i) {
-            cout << "\n--- Tick: " << i << " ---\n";
-            engine.tick();
+                    if (mx < 200) {
+                        if (guiButtons[0]->onClick(mx, my)) {
+                            currentBuildMode = BuildMode::Mine;
+                            std::cout << "[GUI] Aktywowano tryb: Budowa Kopalni\n";
+                        } 
+                        else if (guiButtons[1]->onClick(mx, my)) {
+                            currentBuildMode = BuildMode::Factory;
+                            std::cout << "[GUI] Aktywowano tryb: Budowa Huty\n";
+                        }
+                    }
+                    else {
+                        if (currentBuildMode == BuildMode::Mine) {
+                            auto newMine = std::make_unique<Industry::CoalMine>();
+                            newMine->setPosition({mx - 20, my - 20});
+                            mapObjects.push_back(std::move(newMine));
+                            std::cout << "[Mapa] Postawiono Kopalnie\n";
+                            currentBuildMode = BuildMode::None;
+                        } 
+                        else if (currentBuildMode == BuildMode::Factory) {
+                            auto newFactory = std::make_unique<Industry::SteelMill>();
+                            newFactory->setPosition({mx - 20, my - 20});
+                            mapObjects.push_back(std::move(newFactory));
+                            std::cout << "[Mapa] Postawiono Hute\n";
+                            currentBuildMode = BuildMode::None;
+                        }
+                    }
+                }
+            }
         }
-        cout << "--- KONIEC PETLI TESTOWEJ ---\n\n";
 
-    } catch (const Core::RenderException& e) {
-        cerr << "[BLAD KRYTYCZNY] " << e.what() << "\n";
-        return 1;
-    } catch (const exception& e) {
-        cerr << "[NIEZNANY BLAD] " << e.what() << "\n";
-        return 2;
+        // --- RYSOWANIE KLATKI ---
+        window.clear(sf::Color(40, 40, 40));
+
+        // 1. Najpierw rysujemy budynki na mapie
+        for (const auto& obj : mapObjects) {
+            obj->draw(window);
+        }
+
+        // 2. Na wierzchu rysujemy interfejs
+        window.draw(sidebarPanel);
+        for (const auto& btn : guiButtons) {
+            btn->draw(window);
+        }
+
+        window.display();
     }
 
-    cout << "========================================\n";
-    cout << "  System zamkniety poprawnie.           \n";
-    cout << "========================================\n";
-    
     return 0;
 }

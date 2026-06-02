@@ -9,12 +9,10 @@ namespace Industry {
     public:
         virtual ~Mine() = default;
         
-        // Metody nadpisane z MapObject/IDrawable
-        void draw() override;
+        void draw(sf::RenderWindow& window) override;
         void update() override;
         
-        // Nowa, czysto wirtualna metoda specyficzna dla kopalni
         virtual void generateResource() = 0;
     };
 
-} // namespace Industry
+}

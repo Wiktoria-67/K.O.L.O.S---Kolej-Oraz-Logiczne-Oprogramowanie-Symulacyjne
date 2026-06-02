@@ -10,4 +10,4 @@ namespace Industry {
         // Logika dodania nowej jednostki rudy żelaza do bufora wyjściowego kopalni
     }
 
-} // namespace Industry
+}

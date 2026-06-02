@@ -15,4 +15,4 @@ namespace Logistics {
             : std::runtime_error(message) {}
     };
 
-} // namespace Logistics
+}

@@ -15,11 +15,11 @@ namespace Logistics {
 
     public:
         virtual ~Train() = default;
-        void draw() override;
+        void draw(sf::RenderWindow& window) override;
         void update() override;
         virtual void loadResource(); 
         
         void setRoute(const Route& newRoute);
     };
 
-} // namespace Logistics
+}

@@ -1,11 +1,11 @@
 #include "Train.h"
 #include "CapacityExceededException.h"
 #include <iostream>
-#include <cmath> // Wymagane dla std::abs
+#include <cmath>
 
 namespace Logistics {
 
-    void Train::draw() {
+    void Train::draw(sf::RenderWindow& window) {
         std::cout << "[Renderer] Rysowanie pociagu (X:" << position.x << ", Y:" << position.y << ")\n";
     }
 

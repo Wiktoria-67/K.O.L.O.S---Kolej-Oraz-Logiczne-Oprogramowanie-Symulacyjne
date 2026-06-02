@@ -2,8 +2,13 @@
 
 namespace Industry {
 
-    void Mine::draw() {
-        // Docelowo: Wywolanie funkcji z biblioteki graficznej (np. rysowanie sprite'a)
+    void Mine::draw(sf::RenderWindow& window) {
+        sf::RectangleShape rect({40.f, 40.f});
+        rect.setPosition({static_cast<float>(position.x), static_cast<float>(position.y)});
+        rect.setFillColor(sf::Color(150, 70, 70));
+        rect.setOutlineThickness(1.f);
+        rect.setOutlineColor(sf::Color::White);
+        window.draw(rect);
     }
 
     void Mine::update() {
@@ -11,9 +16,9 @@ namespace Industry {
         if (resourceTimer > 0) {
             resourceTimer--;
         } else {
-            generateResource(); // Wywołanie polimorficzne
-            resourceTimer = 100; // Reset timera po wydobyciu (przykładowa wartość)
+            generateResource(); 
+            resourceTimer = 100; 
         }
     }
 
-} // namespace Industry
+}

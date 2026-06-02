@@ -21,4 +21,4 @@ namespace Industry {
         // Logika dodania gotowej stali do bufora wyjściowego (dla pociągów)
     }
 
-} // namespace Industry
+}

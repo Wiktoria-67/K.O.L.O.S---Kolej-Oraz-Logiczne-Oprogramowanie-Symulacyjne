@@ -9,4 +9,4 @@ namespace Industry {
         void generateResource() override;
     };
 
-} // namespace Industry
+}

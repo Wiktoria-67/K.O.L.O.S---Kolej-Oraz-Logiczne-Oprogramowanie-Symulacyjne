@@ -11,11 +11,11 @@ namespace Industry {
         virtual ~Factory() = default;
 
         // Metody nadpisane z MapObject/IDrawable
-        void draw() override;
+        void draw(sf::RenderWindow& window) override;
         void update() override;
 
         // Metoda przetwarzajaca surowce (moze rzucic EmptyStorageException)
         virtual void processResources() = 0; 
     };
 
-} // namespace Industry
+}

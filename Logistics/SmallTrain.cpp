@@ -3,10 +3,9 @@
 namespace Logistics {
 
     SmallTrain::SmallTrain() {
-        // Parametry zgodne z sekcją "3. Szczegółowa Hierarchia Klas"
         maxCapacity = 2;       // Niska pojemność
         currentCapacity = 0;
         speed = 10.0f;         // Wysoka prędkość maksymalna
     }
 
-} // namespace Logistics
+}

@@ -18,4 +18,4 @@ namespace Industry {
         // Logika generowania punktów zwycięstwa / finalnych produktów
     }
 
-} // namespace Industry
+}

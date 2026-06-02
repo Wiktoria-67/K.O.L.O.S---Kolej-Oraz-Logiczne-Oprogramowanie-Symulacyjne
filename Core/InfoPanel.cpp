@@ -3,16 +3,16 @@
 
 namespace Core {
 
-    void InfoPanel::draw() {
+    void InfoPanel::draw(sf::RenderWindow& window) {
         std::cout << "[InfoPanel] Rysowanie panelu informacyjnego.\n";
     }
 
     bool InfoPanel::onClick(int mouseX, int mouseY) {
-        return false; // Panel zazwyczaj nie jest klikalny w ten sam sposob co przycisk
+        return false;
     }
 
     void InfoPanel::updateDisplayData() {
         std::cout << "[InfoPanel] Zaktualizowano statystyki wyswietlania.\n";
     }
 
-} // namespace Core
+}

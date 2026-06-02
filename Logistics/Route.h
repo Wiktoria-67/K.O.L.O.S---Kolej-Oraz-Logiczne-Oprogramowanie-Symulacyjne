@@ -11,7 +11,6 @@ namespace Logistics {
     public:
         Route() = default;
         
-        // Konstruktor pozwalający na wygodne tworzenie trasy z listy punktów
         Route(std::initializer_list<Core::Point2D> points) : waypoints(points) {}
         
         void addWaypoint(Core::Point2D point) { waypoints.push_back(point); }
@@ -19,4 +18,4 @@ namespace Logistics {
         bool isEmpty() const { return waypoints.empty(); }
     };
 
-} // namespace Logistics
+}

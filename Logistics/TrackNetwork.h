@@ -1,6 +1,5 @@
 #pragma once
 #include <vector>
-// Deklaracja wyprzedzająca, aby uniknąć zapętlenia nagłówków.
 // Pełny "#include "Train.h"" znajdzie się w pliku TrackNetwork.cpp
 namespace Logistics { class Train; } 
 
@@ -29,4 +28,4 @@ namespace Logistics {
         bool checkCollisions();
     };
 
-} // namespace Logistics
+}

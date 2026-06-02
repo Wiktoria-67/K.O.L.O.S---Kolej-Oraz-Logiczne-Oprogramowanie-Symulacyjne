@@ -3,29 +3,29 @@ cmake_minimum_required(VERSION 3.10)
 # Nazwa Waszego projektu i używany język
 project(KOLOS_Simulation CXX)
 
-# Wymuszamy standard C++20 zgodnie z dokumentacją
+# Standard C++
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+find_package(SFML COMPONENTS Graphics Window System REQUIRED)
 # Dodajemy wszystkie pliki źródłowe (.cpp) do kompilacji
-# (Na razie wpisujemy te, które stworzymy w pierwszym kroku)
 set(SOURCES
     main.cpp
     
-    # Moduł Core (Programista 1)
+    # Moduł Core
     Core/SimulationEngine.cpp
     Core/Renderer.cpp
     Core/Button.cpp
     Core/InfoPanel.cpp
     
-    # Moduł Logistics (Programista 2)
+    # Moduł Logistics
     Logistics/Train.cpp
     Logistics/SmallTrain.cpp
     Logistics/MediumTrain.cpp
     Logistics/LargeTrain.cpp
     Logistics/TrackNetwork.cpp
     
-    # Moduł Industry (Programista 3)
+    # Moduł Industry
     Industry/Factory.cpp
     Industry/PowerPlant.cpp
     Industry/SteelMill.cpp
@@ -38,3 +38,9 @@ set(SOURCES
 
 # Tworzymy plik wykonywalny
 add_executable(KOLOS ${SOURCES})
+
+# Wskazujemy folder główny jako bazę do include'ów
+target_include_directories(KOLOS PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+
+# Łączymy projekt z modułami SFML (Graphics, Window, System)
+target_link_libraries(KOLOS PRIVATE sfml-graphics sfml-window sfml-system)

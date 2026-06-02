@@ -8,4 +8,4 @@ namespace Logistics {
         MediumTrain();
     };
 
-} // namespace Logistics
+}
