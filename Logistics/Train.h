@@ -1,19 +1,25 @@
 #pragma once
-#include "../Core/MapObject.h" // Ścieżka relatywna do pliku z modułu Core
+#include "../Core/MapObject.h"
+#include "Route.h"
 
 namespace Logistics {
 
-    // Przy dziedziczeniu z innego modułu podajemy jego przestrzeń nazw (Core::)
-    class Train : public Core::MapObject { 
+    class Train : public Core::MapObject {
     protected:
         int currentCapacity;
         int maxCapacity;
         float speed;
+        
+        Route route;
+        size_t currentWaypointIndex = 0;
+
     public:
         virtual ~Train() = default;
         void draw() override;
         void update() override;
         virtual void loadResource(); 
+        
+        void setRoute(const Route& newRoute);
     };
 
-}
+} // namespace Logistics

@@ -1,5 +1,6 @@
 #include "Factory.h"
 #include "EmptyStorageException.h"
+#include <iostream>
 
 namespace Industry {
 
@@ -7,15 +8,17 @@ namespace Industry {
         // Docelowo: Rysowanie budynku fabryki na mapie
     }
 
+
+    // Fragment Industry/Factory.cpp
     void Factory::update() {
-        // W każdym ticku symulacji fabryka próbuje produkować
         try {
             processResources();
+            // Jeśli nie rzuci wyjątku (ma surowce i pracuje):
+            std::cout << "[Factory] Przetwarzam surowce na pozycji X:" 
+                      << position.x << ", Y:" << position.y << "\n";
         } 
         catch (const EmptyStorageException& e) {
-            // Wyłapujemy błąd braku surowców.
-            // Tutaj można np. zmienić stan animacji fabryki na "stoi w miejscu"
-            // lub wyrysować czerwoną ikonkę braku zasobów.
+            // Fabryka stoi w miejscu
         }
     }
 

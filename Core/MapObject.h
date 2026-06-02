@@ -10,5 +10,9 @@ namespace Core {
         virtual ~MapObject() = default;
         void draw() override = 0; 
         virtual void update() = 0;
+
+        // --- NOWE: Gettery i Settery ---
+        void setPosition(Point2D pos) { position = pos; }
+        Point2D getPosition() const { return position; }
     };
 }

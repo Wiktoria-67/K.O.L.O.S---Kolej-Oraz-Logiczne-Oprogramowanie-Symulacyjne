@@ -14,5 +14,8 @@ namespace Core {
         SimulationEngine();
         void startSimulation();
         void tick(); 
+        
+        // --- BRAKUJĄCA DEKLARACJA (Dependency Injection) ---
+        void addMapObject(std::unique_ptr<MapObject> obj); 
     };
 }

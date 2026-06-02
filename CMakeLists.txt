@@ -11,11 +11,29 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # (Na razie wpisujemy te, które stworzymy w pierwszym kroku)
 set(SOURCES
     main.cpp
+    
+    # Moduł Core (Programista 1)
     Core/SimulationEngine.cpp
     Core/Renderer.cpp
     Core/Button.cpp
     Core/InfoPanel.cpp
-    # Tu dodacie kolejne pliki cpp w miarę postępu prac
+    
+    # Moduł Logistics (Programista 2)
+    Logistics/Train.cpp
+    Logistics/SmallTrain.cpp
+    Logistics/MediumTrain.cpp
+    Logistics/LargeTrain.cpp
+    Logistics/TrackNetwork.cpp
+    
+    # Moduł Industry (Programista 3)
+    Industry/Factory.cpp
+    Industry/PowerPlant.cpp
+    Industry/SteelMill.cpp
+    Industry/MachineFactory.cpp
+    Industry/Mine.cpp
+    Industry/CoalMine.cpp
+    Industry/IronMine.cpp
+    Industry/EmptyStorageException.cpp
 )
 
 # Tworzymy plik wykonywalny

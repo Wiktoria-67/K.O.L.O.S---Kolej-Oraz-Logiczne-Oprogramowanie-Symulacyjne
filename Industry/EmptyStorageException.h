@@ -1,20 +1,12 @@
 #pragma once
-#include "../Core/MapObject.h" // Pobieramy baze z folderu Core
+#include <stdexcept>
 
 namespace Industry {
 
-    class Mine : public Core::MapObject {
-    protected:
-        int resourceTimer; // Licznik czasu do wygenerowania kolejnej paczki surowca
+    class EmptyStorageException : public std::logic_error {
     public:
-        virtual ~Mine() = default;
-        
-        // Metody nadpisane z MapObject/IDrawable
-        void draw() override;
-        void update() override;
-        
-        // Nowa, czysto wirtualna metoda specyficzna dla kopalni
-        virtual void generateResource() = 0;
+        // Tylko deklaracja konstruktora, brak nawiasów klamrowych {}
+        EmptyStorageException(); 
     };
 
 } // namespace Industry

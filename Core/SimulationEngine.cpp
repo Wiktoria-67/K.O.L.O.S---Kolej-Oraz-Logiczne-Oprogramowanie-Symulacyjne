@@ -1,36 +1,29 @@
 #include "SimulationEngine.h"
-#include <iostream> // Tylko do testowych logów
+#include <iostream>
 
 namespace Core {
 
-    // Definicja konstruktora
     SimulationEngine::SimulationEngine() : isRunning(false) {
         std::cout << "[System] SimulationEngine zainicjalizowany.\n";
     }
 
-    // Definicja metody startSimulation
+    void SimulationEngine::addMapObject(std::unique_ptr<MapObject> obj) {
+        if (obj) {
+            simulationObjects.push_back(std::move(obj));
+        }
+    }
+
     void SimulationEngine::startSimulation() {
         isRunning = true;
         std::cout << "[System] Startowanie symulacji...\n";
-        
         renderer.initWindow();
-
-        // Tu docelowo znajdzie się główna pętla programu
-        // while (isRunning) { tick(); }
     }
 
-    // Definicja metody tick (pojedynczy krok czasu)
     void SimulationEngine::tick() {
-        // 1. Aktualizacja logiki wszystkich obiektów
+        // Aktualizacja logiki wszystkich dodanych do silnika obiektów
         for(auto& obj : simulationObjects) {
             obj->update();
         }
-
-        // 2. Renderowanie klatki (przygotowanie wektora do rysowania)
-        // Wymaga rzutowania wskaźników lub odpowiedniej struktury, 
-        // to zrobicie w kolejnym etapie prac nad Rendererem.
-        
-        std::cout << "[System] Tick wykonany.\n";
     }
 
 } // namespace Core
