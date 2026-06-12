@@ -6,8 +6,8 @@ project(KOLOS_Simulation CXX)
 # Standard C++
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 find_package(SFML COMPONENTS Graphics Window System REQUIRED)
+include_directories("/opt/homebrew/include")
 # Dodajemy wszystkie pliki źródłowe (.cpp) do kompilacji
 set(SOURCES
     main.cpp
@@ -38,9 +38,7 @@ set(SOURCES
 
 # Tworzymy plik wykonywalny
 add_executable(KOLOS ${SOURCES})
+target_link_libraries(KOLOS PRIVATE SFML::Graphics SFML::Window SFML::System)
 
 # Wskazujemy folder główny jako bazę do include'ów
 target_include_directories(KOLOS PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-
-# Łączymy projekt z modułami SFML (Graphics, Window, System)
-target_link_libraries(KOLOS PRIVATE sfml-graphics sfml-window sfml-system)
