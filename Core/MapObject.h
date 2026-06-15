@@ -10,8 +10,8 @@ namespace Core {
      * * Dziedziczą po niej m.in. pociągi (Logistics) i fabryki (Industry).
      */
     class MapObject : public IDrawable {
-    protected: 
-        sf::Color objectColor = sf::Color::White; // Zmienna przechowująca kolor
+    protected:
+        sf::Color objectColor = sf::Color::White; ///< Zmienna przechowująca kolor
 
     private:
         Point2D position; ///< Aktualna pozycja obiektu na mapie.
@@ -36,6 +36,11 @@ namespace Core {
          * @return Aktualne współrzędne w formacie Point2D.
          */
         Point2D getPosition() const { return position; }
+
+        /**
+         * @brief Zmienia kolor, w jakim obiekt będzie renderowany w oknie SFML.
+         * @param c Kolor w formacie sf::Color.
+         */
         void setColor(sf::Color c) { objectColor = c; }
     };
 }

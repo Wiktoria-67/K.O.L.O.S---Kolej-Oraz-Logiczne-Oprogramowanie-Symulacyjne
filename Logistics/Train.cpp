@@ -35,14 +35,8 @@ namespace Logistics {
     }
 
     void Train::update() {
-        /* * Główna logika ruchu pociągu:
-         * 1. Pobiera punkt docelowy z trasy.
-         * 2. Porównuje aktualną pozycję z celem (wektor przesunięcia).
-         * 3. Jeśli odległość <= prędkość, "teleportuje" do punktu i przechodzi do kolejnego.
-         * 4. W przeciwnym razie aktualizuje pozycję o wartość wektora prędkości.
-         */
-        if (route.isEmpty() || currentWaypointIndex >= route.getWaypoints().size()) {
-            return; 
+        if (route.isEmpty()) {
+            return;
         }
 
         Core::Point2D target = route.getWaypoints()[currentWaypointIndex];
@@ -50,19 +44,34 @@ namespace Logistics {
         int dx = target.x - getPosition().x;
         int dy = target.y - getPosition().y;
 
-        // Sprawdzenie, czy jesteśmy wystarczająco blisko celu (tolerancja na prędkość)
-        // Jeśli jesteśmy na tyle blisko, że w następnym ticku przekroczylibyśmy cel, po prostu "cumujemy" na stacji
         if (std::abs(dx) <= static_cast<int>(speed) && std::abs(dy) <= static_cast<int>(speed)) {
             setPosition(target);
-            currentWaypointIndex++;
 
             std::cout << "[Logistics] Pociag osiagnal wezel trasy (X: "
                       << getPosition().x << ", Y: " << getPosition().y << ").\n";
-        } else {
 
+            if (movingForward) {
+                if (currentWaypointIndex + 1 < route.getWaypoints().size()) {
+                    currentWaypointIndex++;
+                } else {
+                    movingForward = false;
+                    if (currentWaypointIndex > 0) {
+                        currentWaypointIndex--;
+                    }
+                }
+            } else {
+                if (currentWaypointIndex > 0) {
+                    currentWaypointIndex--;
+                } else {
+                    movingForward = true;
+                    if (currentWaypointIndex + 1 < route.getWaypoints().size()) {
+                        currentWaypointIndex++;
+                    }
+                }
+            }
+        } else {
             Core::Point2D currentPos = getPosition();
 
-            // Ruch w stronę punktu docelowego
             if (dx > 0) currentPos.x += static_cast<int>(speed);
             else if (dx < 0) currentPos.x -= static_cast<int>(speed);
 
@@ -70,9 +79,6 @@ namespace Logistics {
             else if (dy < 0) currentPos.y -= static_cast<int>(speed);
 
             setPosition(currentPos);
-
-            /*std::cout << "[Logistics] Pociag w trasie... Pozycja: "
-                      << getPosition().x << ", " << getPosition().y << "\n";*/
         }
     }
 

@@ -21,7 +21,18 @@ namespace Industry {
          * @throw EmptyStorageException Jeśli zabraknie węgla.
          */
         void processResources() override;
-        int getGeneratedEnergy() const { return generatedEnergy; } // NOWE
+
+        /**
+         * @brief Zwraca całkowitą dostępną energię w systemie.
+         * @return Liczba jednostek wygenerowanego prądu.
+         */
+        int getGeneratedEnergy() const { return generatedEnergy; }
+
+        /**
+         * @brief Pobiera (zużywa) określoną ilość prądu z sieci na potrzeby innych budynków.
+         * @param amount Ilość prądu do skonsumowania.
+         */
+        void consumeEnergy(int amount) { if (generatedEnergy >= amount) generatedEnergy -= amount; }
     };
 
 }

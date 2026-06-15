@@ -183,6 +183,7 @@ int main() {
                                 newPowerPlant->setPosition({mx - 20, my - 20});
                                 newPowerPlant->setColor(sf::Color(255, 140, 0)); 
                                 pointerToPowerPlant = newPowerPlant.get();
+                                if (pointerToMachineFactory) pointerToMachineFactory->connectToGrid(pointerToPowerPlant);
                                 mapObjects.push_back(std::move(newPowerPlant));
                                 currentBuildMode = BuildMode::None;
                             } else if (currentBuildMode == BuildMode::MachineFactory) {
@@ -190,6 +191,7 @@ int main() {
                                 newMachineFactory->setPosition({mx - 20, my - 20});
                                 newMachineFactory->setColor(sf::Color(128, 0, 128)); 
                                 pointerToMachineFactory = newMachineFactory.get();
+                                if (pointerToPowerPlant) pointerToMachineFactory->connectToGrid(pointerToPowerPlant);
                                 mapObjects.push_back(std::move(newMachineFactory));
                                 currentBuildMode = BuildMode::None;
                             } else if (currentBuildMode == BuildMode::Route) {
@@ -225,33 +227,35 @@ int main() {
                 obj->update(); 
             }
 
-            // NAPRAWIONA KOLEJNOŚĆ: Najpierw ładujemy/rozładowujemy, potem uciekamy na cmentarzysko!
+
             for (const auto& obj : mapObjects) {
                 if (auto* train = dynamic_cast<Logistics::Train*>(obj.get())) {
-                    
+
                     auto cargo = train->getCargoType();
 
-                    // 1. Zrzut ładunku u celu (działa poprawnie przed teleportacją!)
-                    if (cargo == Core::ResourceType::Coal) {
-                        if (pointerToCoalMine) train->loadFromMine(*pointerToCoalMine);
-                        if (pointerToFactory) train->unloadToFactory(*pointerToFactory, false); 
-                        if (pointerToPowerPlant) train->unloadToFactory(*pointerToPowerPlant, false); 
-                    } 
-                    else if (cargo == Core::ResourceType::IronOre) {
-                        if (pointerToIronMine) train->loadFromMine(*pointerToIronMine);
-                        if (pointerToFactory) train->unloadToFactory(*pointerToFactory, true);
-                    }
-                    else if (cargo == Core::ResourceType::Steel) {
-                        if (pointerToFactory) train->loadFromFactory(*pointerToFactory);
-                        if (pointerToMachineFactory) train->unloadToFactory(*pointerToMachineFactory, false);
+
+                    for (const auto& targetObj : mapObjects) {
+                        if (cargo == Core::ResourceType::Coal) {
+                            if (auto* mine = dynamic_cast<Industry::CoalMine*>(targetObj.get())) train->loadFromMine(*mine);
+                            if (auto* mill = dynamic_cast<Industry::SteelMill*>(targetObj.get())) train->unloadToFactory(*mill, false);
+                            if (auto* plant = dynamic_cast<Industry::PowerPlant*>(targetObj.get())) train->unloadToFactory(*plant, false);
+                        }
+                        else if (cargo == Core::ResourceType::IronOre) {
+                            if (auto* mine = dynamic_cast<Industry::IronMine*>(targetObj.get())) train->loadFromMine(*mine);
+                            if (auto* mill = dynamic_cast<Industry::SteelMill*>(targetObj.get())) train->unloadToFactory(*mill, true);
+                        }
+                        else if (cargo == Core::ResourceType::Steel) {
+                            if (auto* mill = dynamic_cast<Industry::SteelMill*>(targetObj.get())) train->loadFromFactory(*mill);
+                            if (auto* mFact = dynamic_cast<Industry::MachineFactory*>(targetObj.get())) train->unloadToFactory(*mFact, false);
+                        }
                     }
 
-                    // 2. Jeśli pociąg zrobił swoje i dotarł na koniec -> CMENTARZYSKO
-                    if (train->isFinished()) {
+
+                   /* if (train->isFinished()) {
                         static int cmentarzyskoOffset = 0;
-                        train->setPosition({-1000 - cmentarzyskoOffset, -1000}); 
-                        cmentarzyskoOffset += 30; 
-                    }
+                        train->setPosition({-1000 - cmentarzyskoOffset, -1000});
+                        cmentarzyskoOffset += 30;
+                    }*/
                 }
             }
 

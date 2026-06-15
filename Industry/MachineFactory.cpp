@@ -8,8 +8,16 @@ namespace Industry {
     }
 
 void MachineFactory::processResources() {
-    consumeInputA(1); 
-    victoryPoints += 50; 
+
+        if (!powerGrid || powerGrid->getGeneratedEnergy() < 10) {
+        throw EmptyStorageException(); // Zatrzymuje produkcję z powodu braku zasilania
+    }
+
+    consumeInputA(1);
+
+    powerGrid->consumeEnergy(10);
+
+    victoryPoints += 50;
 }
 
 }
