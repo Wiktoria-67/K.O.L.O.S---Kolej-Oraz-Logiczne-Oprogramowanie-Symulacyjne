@@ -246,8 +246,8 @@ TEST(SimulationEngineTest, TickUpdatesAllRegisteredObjects) {
     DummyMapObject* ptr1 = dummy1.get();
     DummyMapObject* ptr2 = dummy2.get();
 
-    engine.addMapObject(std::move(dummy1));
-    engine.addMapObject(std::move(dummy2));
+    engine.mapObjects.push_back(std::move(dummy1));
+    engine.mapObjects.push_back(std::move(dummy2));
 
     EXPECT_FALSE(ptr1->wasUpdated);
     EXPECT_FALSE(ptr2->wasUpdated);

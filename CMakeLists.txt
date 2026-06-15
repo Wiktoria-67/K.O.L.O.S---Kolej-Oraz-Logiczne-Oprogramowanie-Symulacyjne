@@ -26,6 +26,8 @@ set(LIBRARY_SOURCES
     Core/RenderException.h
     Core/SharedTypes.h
     Core/UIElement.h
+    Core/application.h
+    Core/application.cpp
 
 
 
@@ -66,7 +68,6 @@ set(LIBRARY_SOURCES
 )
 
 add_library(KOLOS_Lib STATIC ${LIBRARY_SOURCES})
-
 
 target_include_directories(KOLOS_Lib PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 

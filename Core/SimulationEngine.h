@@ -2,39 +2,33 @@
 #include <vector>
 #include <memory>
 #include "MapObject.h"
-#include "Renderer.h"
+#include "../Logistics/TrackNetwork.h"
+#include "../Logistics/Route.h"
+
+// Deklaracje zapowiadające
+namespace Industry {
+class CoalMine; class IronMine; class SteelMill; class PowerPlant; class MachineFactory;
+}
 
 namespace Core {
-    /**
-     * @class SimulationEngine
-     * @brief Rdzeń architektoniczny zarządzający całym cyklem życia aplikacji.
-     * * Hermetyzuje obiekty mapy, posiada instancję renderera oraz kontroluje przepływ czasu.
-     */
-    class SimulationEngine {
-    private:
-        std::vector<std::unique_ptr<MapObject>> simulationObjects; ///< Kontener przechowujący wszystkie byty przestrzenne w grze.
-        Renderer renderer; ///< Wewnętrzny moduł wyświetlający grafikę.
-        bool isRunning; ///< Flaga wskazująca, czy główna pętla programu jest aktywna.
-    public:
-        /**
-         * @brief Konstruktor silnika. Ustawia początkowy stan bezpieczny.
-         */
-        SimulationEngine();
+class SimulationEngine {
+public:
+    // Główne kontenery symulacji
+    std::vector<std::unique_ptr<MapObject>> mapObjects;
+    Logistics::TrackNetwork trackNetwork;
+    std::vector<Logistics::Route> allRoutes;
+    long long tickCounter = 0;
 
-        /**
-         * @brief Uruchamia silnik, otwiera okno systemowe i podnosi flagę isRunning.
-         */
-        void startSimulation();
+    // Wskaźniki na obiekty infrastruktury
+    Industry::CoalMine* pointerToCoalMine = nullptr;
+    Industry::IronMine* pointerToIronMine = nullptr;
+    Industry::SteelMill* pointerToFactory = nullptr;
+    Industry::PowerPlant* pointerToPowerPlant = nullptr;
+    Industry::MachineFactory* pointerToMachineFactory = nullptr;
 
-        /**
-         * @brief Wykonuje pojedynczą klatkę logiki, iterując przez wszystkie dodane obiekty.
-         */
-        void tick();
-        
-        /**
-         * @brief Odbiera na własność obiekt przestrzenny i rejestruje go w pętli symulacji.
-         * @param obj Unikalny wskaźnik na instancję dziedziczącą po MapObject.
-         */
-        void addMapObject(std::unique_ptr<MapObject> obj); 
-    };
+    SimulationEngine() = default;
+
+    // Pojedynczy krok logiki symulacji (dawne obliczenia z pętli main)
+    void tick();
+};
 }
