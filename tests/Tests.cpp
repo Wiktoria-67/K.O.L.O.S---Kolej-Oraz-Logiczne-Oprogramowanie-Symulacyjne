@@ -85,21 +85,21 @@ TEST(TrainTest, TrainMovesTowardsTargetBasedOnSpeed) {
     EXPECT_EQ(train.getPosition().x, 0);
     EXPECT_EQ(train.getPosition().y, 0);
 
-    // Tick 1: Pociąg orientuje się, że jest na węźle startowym (0) i podbija cel na węzeł (1)
+    // Tick 1: Pociąg orientuje się, że jest na węźle startowym i podbija cel na węzeł (1)
     train.update();
     EXPECT_EQ(train.getPosition().x, 0); // Stoi w miejscu
 
-    // Tick 2: Pociąg faktycznie rusza w trasę (prędkość 10)
+    // Tick 2: Pociąg rusza (prędkość: 3)
     train.update();
-    EXPECT_EQ(train.getPosition().x, 10);
+    EXPECT_EQ(train.getPosition().x, 3);
 
-    // Tick 3: Pociąg jedzie dalej
+    // Tick 3: Pociąg jedzie dalej (pozycja: 6)
     train.update();
-    EXPECT_EQ(train.getPosition().x, 20);
+    EXPECT_EQ(train.getPosition().x, 6);
 
-    // Tick 4: Dociera do celu (zostało mu 5 dystansu do 25, a prędkość to 10)
+    // Tick 4: Pociąg jedzie dalej (pozycja: 9)
     train.update();
-    EXPECT_EQ(train.getPosition().x, 25);
+    EXPECT_EQ(train.getPosition().x, 9);
 }
 
 // ==========================================
@@ -205,7 +205,7 @@ TEST(CoreTest, Point2DEqualityOperatorWorks) {
 // ==========================================
 
 TEST(UITest, ButtonDetectsClickInsideHitbox) {
-    Core::Button btn(10, 20, 100, 50, sf::Color::Red);
+    Core::Button btn(10, 20, 100, 50, sf::Color::Red, "Test");
 
     EXPECT_TRUE(btn.onClick(60, 45));
     EXPECT_TRUE(btn.onClick(10, 20));

@@ -6,7 +6,7 @@ namespace Logistics {
     MediumTrain::MediumTrain() {
         maxCapacity = 5;       
         currentCapacity = 0;
-        speed = 6.0f;          
+        speed = 2.0f;
     }
 
     void MediumTrain::loadResource() {

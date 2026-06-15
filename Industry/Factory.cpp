@@ -17,8 +17,8 @@ namespace Industry {
         try {
             processResources();
             // Jeśli nie rzuci wyjątku (ma surowce i pracuje):
-            std::cout << "[Factory] Przetwarzam surowce na pozycji X:" 
-                      << getPosition().x << ", Y:" << getPosition().y << "\n";
+            /*std::cout << "[Factory] Przetwarzam surowce na pozycji X:"
+                      << getPosition().x << ", Y:" << getPosition().y << "\n";*/
         } 
         catch (const EmptyStorageException& e) {
             // Fabryka stoi w miejscu

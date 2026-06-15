@@ -8,7 +8,20 @@
 namespace Logistics {
 
     void Train::draw(sf::RenderWindow& window) {
-        std::cout << "[Renderer] Rysowanie pociagu (X:" << getPosition().x << ", Y:" << getPosition().y << ")\n";
+        //std::cout << "[Renderer] Rysowanie pociagu (X:" << getPosition().x << ", Y:" << getPosition().y << ")\n";
+        // Fizyczne rysowanie pociągu w oknie SFML
+        sf::RectangleShape rect({20.f, 20.f}); // Pociąg jest mniejszy (20x20) niż budynki (40x40)
+
+        // Ustawiamy pozycję, rzutując współrzędne logiczne na float dla SFML
+        rect.setPosition({static_cast<float>(getPosition().x), static_cast<float>(getPosition().y)});
+
+        // Pociąg będzie miał charakterystyczny, żółto-pomarańczowy kolor, by odznaczał się na tle mapy
+        rect.setFillColor(sf::Color(200, 150, 50));
+        rect.setOutlineThickness(1.f);
+        rect.setOutlineColor(sf::Color::White);
+
+        // Zlecenie narysowania obiektu do karty graficznej
+        window.draw(rect);
     }
 
     void Train::setRoute(const Route& newRoute) {
@@ -43,7 +56,7 @@ namespace Logistics {
             setPosition(target);
             currentWaypointIndex++;
             
-            std::cout << "[Logistics] Pociag osiagnal wezel trasy (X: " 
+            std::cout << "[Logistics] Pociag osiagnal wezel trasy (X: "
                       << getPosition().x << ", Y: " << getPosition().y << ").\n";
         } else {
 
@@ -58,8 +71,8 @@ namespace Logistics {
 
             setPosition(currentPos);
 
-            std::cout << "[Logistics] Pociag w trasie... Pozycja: " 
-                      << getPosition().x << ", " << getPosition().y << "\n";
+            /*std::cout << "[Logistics] Pociag w trasie... Pozycja: "
+                      << getPosition().x << ", " << getPosition().y << "\n";*/
         }
     }
 

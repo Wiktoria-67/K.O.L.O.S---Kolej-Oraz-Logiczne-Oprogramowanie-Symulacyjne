@@ -75,6 +75,9 @@ add_executable(KOLOS main.cpp)
 target_link_libraries(KOLOS PRIVATE KOLOS_Lib)
 
 
+# Kopiowanie folderu z zasobami (assets) z repozytorium do folderu build
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
 # ŚRODOWISKO TESTOWE (Google Test)
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 

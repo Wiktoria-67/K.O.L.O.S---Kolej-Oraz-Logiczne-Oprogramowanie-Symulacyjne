@@ -1,6 +1,7 @@
 #pragma once
 #include "UIElement.h"
 #include <string>
+#include <optional>
 
 namespace Core {
 
@@ -11,6 +12,8 @@ namespace Core {
     class Button : public UIElement {
     private:
         sf::Color buttonColor; ///< Kolor wypełnienia przycisku.
+        sf::Font font;   ///< Obiekt czcionki
+        std::optional<sf::Text> text;
     public:
         /**
          * @brief Inicjalizuje przycisk o określonych wymiarach i wyglądzie.
@@ -19,8 +22,9 @@ namespace Core {
          * @param w Szerokość przycisku.
          * @param h Wysokość przycisku.
          * @param color Kolor bazowy przycisku z biblioteki SFML.
+         * @param labelText Tekst nagit status przycisku z biblioteki SFML.
          */
-        Button(int x, int y, int w, int h, sf::Color color);
+        Button(int x, int y, int w, int h, sf::Color color, const std::string& labelText);
 
         void draw(sf::RenderWindow& window) override;
 
