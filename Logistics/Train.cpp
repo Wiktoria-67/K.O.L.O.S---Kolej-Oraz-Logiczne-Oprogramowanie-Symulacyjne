@@ -6,7 +6,7 @@
 namespace Logistics {
 
     void Train::draw(sf::RenderWindow& window) {
-        std::cout << "[Renderer] Rysowanie pociagu (X:" << position.x << ", Y:" << position.y << ")\n";
+        std::cout << "[Renderer] Rysowanie pociagu (X:" << getPosition().x << ", Y:" << getPosition().y << ")\n";
     }
 
     void Train::setRoute(const Route& newRoute) {
@@ -15,7 +15,7 @@ namespace Logistics {
         
         // Jeśli trasa nie jest pusta, od razu ustawiamy pociąg na stacji początkowej
         if (!route.isEmpty()) {
-            position = route.getWaypoints().front();
+            setPosition(route.getWaypoints().front());
         }
     }
 
@@ -32,26 +32,32 @@ namespace Logistics {
 
         Core::Point2D target = route.getWaypoints()[currentWaypointIndex];
 
-        int dx = target.x - position.x;
-        int dy = target.y - position.y;
+        int dx = target.x - getPosition().x;
+        int dy = target.y - getPosition().y;
 
         // Sprawdzenie, czy jesteśmy wystarczająco blisko celu (tolerancja na prędkość)
-        if (std::abs(dx) <= speed && std::abs(dy) <= speed) {
-            position = target;
+        // Jeśli jesteśmy na tyle blisko, że w następnym ticku przekroczylibyśmy cel, po prostu "cumujemy" na stacji
+        if (std::abs(dx) <= static_cast<int>(speed) && std::abs(dy) <= static_cast<int>(speed)) {
+            setPosition(target);
             currentWaypointIndex++;
             
             std::cout << "[Logistics] Pociag osiagnal wezel trasy (X: " 
-                      << position.x << ", Y: " << position.y << ").\n";
+                      << getPosition().x << ", Y: " << getPosition().y << ").\n";
         } else {
-            // Ruch w stronę punktu docelowego
-            if (dx > 0) position.x += static_cast<int>(speed);
-            else if (dx < 0) position.x -= static_cast<int>(speed);
 
-            if (dy > 0) position.y += static_cast<int>(speed);
-            else if (dy < 0) position.y -= static_cast<int>(speed);
+            Core::Point2D currentPos = getPosition();
+
+            // Ruch w stronę punktu docelowego
+            if (dx > 0) currentPos.x += static_cast<int>(speed);
+            else if (dx < 0) currentPos.x -= static_cast<int>(speed);
+
+            if (dy > 0) currentPos.y += static_cast<int>(speed);
+            else if (dy < 0) currentPos.y -= static_cast<int>(speed);
+
+            setPosition(currentPos);
 
             std::cout << "[Logistics] Pociag w trasie... Pozycja: " 
-                      << position.x << ", " << position.y << "\n";
+                      << getPosition().x << ", " << getPosition().y << "\n";
         }
     }
 

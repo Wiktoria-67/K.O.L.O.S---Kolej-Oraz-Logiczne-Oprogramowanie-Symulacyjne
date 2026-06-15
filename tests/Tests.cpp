@@ -35,7 +35,6 @@ TEST(RouteTest, CanAddWaypointsToRoute) {
     EXPECT_FALSE(route.isEmpty());
     EXPECT_EQ(route.getWaypoints().size(), 1);
 
-
     EXPECT_EQ(route.getWaypoints().front().x, 10);
     EXPECT_EQ(route.getWaypoints().front().y, 20);
 }
@@ -82,7 +81,7 @@ TEST(TrainTest, TrainMovesTowardsTargetBasedOnSpeed) {
 
     train.setRoute(route);
 
-    // Upewniamy się, że pociąg wskoczył na stację początkową
+    // Upewniamy się, że pociąg wskoczył na stację początkową (korzystając z gettera)
     EXPECT_EQ(train.getPosition().x, 0);
     EXPECT_EQ(train.getPosition().y, 0);
 
@@ -102,8 +101,9 @@ TEST(TrainTest, TrainMovesTowardsTargetBasedOnSpeed) {
     train.update();
     EXPECT_EQ(train.getPosition().x, 25);
 }
+
 // ==========================================
-// TESTY MODUŁU: LOGISTYKA - SIEC TORÓW
+// TESTY MODUŁU: LOGISTYKA - SIEC TORÓW I KOLIZJE
 // ==========================================
 
 TEST(TrackNetworkTest, CanRegisterTrainsWithoutCrashing) {
@@ -120,10 +120,31 @@ TEST(TrackNetworkTest, CollisionCheckReturnsFalseWhenNoCollisions) {
     Logistics::MediumTrain t1;
     Logistics::MediumTrain t2;
 
+    // Rozsuwamy pociągi korzystając z bezpiecznej enkapsulacji (setterów)
+    t1.setPosition({10, 10});
+    t2.setPosition({50, 50});
+
     network.registerTrain(&t1);
     network.registerTrain(&t2);
 
+    // Nie nakładają się, więc kolizji brak
     EXPECT_FALSE(network.checkCollisions());
+}
+
+TEST(TrackNetworkTest, CollisionCheckThrowsOnOverlap) {
+    Logistics::TrackNetwork network;
+    Logistics::MediumTrain t1;
+    Logistics::MediumTrain t2;
+
+    // Wymuszamy fizyczne nałożenie się obiektów
+    t1.setPosition({100, 100});
+    t2.setPosition({100, 100});
+
+    network.registerTrain(&t1);
+    network.registerTrain(&t2);
+
+    // System musi to bezwzględnie wykryć i rzucić odpowiedni wyjątek
+    EXPECT_THROW(network.checkCollisions(), Logistics::CollisionException);
 }
 
 // ==========================================
@@ -131,24 +152,20 @@ TEST(TrackNetworkTest, CollisionCheckReturnsFalseWhenNoCollisions) {
 // ==========================================
 
 TEST(FactoryTest, PowerPlantThrowsWhenEmpty) {
-
     Industry::PowerPlant plant;
-
+    // Puste bufory - wyjątek z obsługi enkapsulacji
     EXPECT_THROW(plant.processResources(), Industry::EmptyStorageException);
 }
 
 TEST(FactoryTest, SteelMillThrowsWhenEmpty) {
     Industry::SteelMill mill;
-    // Huta wymaga dwóch surowców, więc przy pustych buforach również powinna zgłosić błąd logiki
+    // Huta przywołuje gettery - przy pustych wyrzuci błąd logiki
     EXPECT_THROW(mill.processResources(), Industry::EmptyStorageException);
 }
 
 TEST(FactoryTest, FactoryUpdateCatchesException) {
     Industry::MachineFactory factory;
-
-    // Metoda update() w klasie bazowej Factory posiada wbudowany blok try-catch.
-    // Oznacza to, że z perspektywy głównej pętli gry (SimulationEngine),
-    // wywołanie update() na pustej fabryce powinno być w 100% bezpieczne.
+    // Pętla update ma try-catch, co czyni ją bezpieczną dla silnika
     EXPECT_NO_THROW(factory.update());
 }
 
@@ -158,7 +175,6 @@ TEST(FactoryTest, FactoryUpdateCatchesException) {
 
 TEST(MineTest, CoalMineUpdateLoopExecutesSafely) {
     Industry::CoalMine mine;
-
     for(int i = 0; i < 60; ++i) {
         EXPECT_NO_THROW(mine.update());
     }
@@ -166,7 +182,6 @@ TEST(MineTest, CoalMineUpdateLoopExecutesSafely) {
 
 TEST(MineTest, IronMineUpdateLoopExecutesSafely) {
     Industry::IronMine mine;
-
     for(int i = 0; i < 100; ++i) {
         EXPECT_NO_THROW(mine.update());
     }
@@ -190,25 +205,19 @@ TEST(CoreTest, Point2DEqualityOperatorWorks) {
 // ==========================================
 
 TEST(UITest, ButtonDetectsClickInsideHitbox) {
-    // Tworzymy przycisk: X: 10, Y: 20, Szerokość: 100, Wysokość: 50
     Core::Button btn(10, 20, 100, 50, sf::Color::Red);
 
-    // Kliknięcia idealnie w środku
     EXPECT_TRUE(btn.onClick(60, 45));
+    EXPECT_TRUE(btn.onClick(10, 20));
+    EXPECT_TRUE(btn.onClick(110, 70));
 
-    // Kliknięcia na krawędziach (zgodnie z kodem >= i <= powinny zwracać true)
-    EXPECT_TRUE(btn.onClick(10, 20)); // Lewy górny róg
-    EXPECT_TRUE(btn.onClick(110, 70)); // Prawy dolny róg
-
-    // Kliknięcia poza przyciskiem
-    EXPECT_FALSE(btn.onClick(5, 45));  // Za daleko w lewo
-    EXPECT_FALSE(btn.onClick(60, 10)); // Za wysoko
-    EXPECT_FALSE(btn.onClick(115, 75)); // Całkowicie poza zasięgiem
+    EXPECT_FALSE(btn.onClick(5, 45));
+    EXPECT_FALSE(btn.onClick(60, 10));
+    EXPECT_FALSE(btn.onClick(115, 75));
 }
 
 TEST(UITest, InfoPanelIgnoresClicks) {
     Core::InfoPanel panel;
-    // InfoPanel ma zawsze ignorować kliknięcia
     EXPECT_FALSE(panel.onClick(0, 0));
     EXPECT_FALSE(panel.onClick(999, 999));
 }
@@ -231,25 +240,20 @@ public:
 TEST(SimulationEngineTest, TickUpdatesAllRegisteredObjects) {
     Core::SimulationEngine engine;
 
-    // Tworzymy dwa testowe obiekty
     auto dummy1 = std::make_unique<DummyMapObject>();
     auto dummy2 = std::make_unique<DummyMapObject>();
 
-    // Zapisujemy nagie wskaźniki, by móc sprawdzić ich stan po oddaniu do silnika
     DummyMapObject* ptr1 = dummy1.get();
     DummyMapObject* ptr2 = dummy2.get();
 
     engine.addMapObject(std::move(dummy1));
     engine.addMapObject(std::move(dummy2));
 
-    // Przed wywołaniem tick(), obiekty nie powinny być zaktualizowane
     EXPECT_FALSE(ptr1->wasUpdated);
     EXPECT_FALSE(ptr2->wasUpdated);
 
-    // Wywołujemy jedną klatkę symulacji
     engine.tick();
 
-    // Silnik powinien przejść po wektorze i wywołać update() na obu obiektach
     EXPECT_TRUE(ptr1->wasUpdated);
     EXPECT_TRUE(ptr2->wasUpdated);
 }

@@ -10,7 +10,7 @@ namespace Core {
      * * Dziedziczą po niej m.in. pociągi (Logistics) i fabryki (Industry).
      */
     class MapObject : public IDrawable {
-    protected:
+    private:
         Point2D position; ///< Aktualna pozycja obiektu na mapie.
     public:
         virtual ~MapObject() = default;

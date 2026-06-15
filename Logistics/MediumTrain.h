@@ -13,6 +13,14 @@ namespace Logistics {
          * @brief Inicjalizuje średni pociąg (maxCapacity = 5, speed = 6.0f).
          */
         MediumTrain();
+
+
+        /**
+         * @brief Polimorficzne ładowanie surowca dla pociągu średniego.
+         * * Realizuje standardowy załadunek paletowy i rejestruje bieżący stan magazynu w logach.
+         * @throw CapacityExceededException Jeśli ładownia pociągu osiągnęła maksymalny limit.
+         */
+        void loadResource() override;
     };
 
 }

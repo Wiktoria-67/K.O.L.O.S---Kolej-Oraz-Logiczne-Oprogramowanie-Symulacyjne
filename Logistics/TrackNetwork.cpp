@@ -17,6 +17,7 @@ namespace Logistics {
                   << activeTrains.size() << " aktywnych pociagow...\n";
     }
 
+
     bool TrackNetwork::checkCollisions() {
         /* * Detekcja kolizji:
          * Sprawdza każdą parę pociągów pod kątem współdzielenia tych samych współrzędnych.
@@ -26,14 +27,12 @@ namespace Logistics {
         for (size_t i = 0; i < activeTrains.size(); ++i) {
             for (size_t j = i + 1; j < activeTrains.size(); ++j) {
 
-                bool collisionDetected = false; 
-
-                if (collisionDetected) {
+                if (activeTrains[i]->getPosition() == activeTrains[j]->getPosition()) {
                     throw CollisionException();
                 }
             }
         }
-        return false;
+        return false; // Brak nakładających się pociągów
     }
 
 }
