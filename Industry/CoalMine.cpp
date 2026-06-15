@@ -1,4 +1,5 @@
 #include "CoalMine.h"
+#include <iostream>
 
 namespace Industry {
 
@@ -8,6 +9,8 @@ namespace Industry {
 
     void CoalMine::generateResource() {
         // Logika dodania nowej jednostki węgla do bufora wyjściowego kopalni
+        increaseOutputBuffer(1); // Dodanie węgla do bufora
+        std::cout << "[CoalMine] Wykopano wegiel! Stan magazynu: " << getOutputBuffer() << "\n";
     }
 
 }

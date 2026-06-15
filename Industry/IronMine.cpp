@@ -1,3 +1,4 @@
+#include <iostream>
 #include "IronMine.h"
 
 namespace Industry {
@@ -8,6 +9,8 @@ namespace Industry {
 
     void IronMine::generateResource() {
         // Logika dodania nowej jednostki rudy żelaza do bufora wyjściowego kopalni
+        increaseOutputBuffer(1); // Dodanie rudy do bufora
+        std::cout << "[IronMine] Wykopano rude zelaza! Stan magazynu: " << getOutputBuffer() << "\n";
     }
 
 }

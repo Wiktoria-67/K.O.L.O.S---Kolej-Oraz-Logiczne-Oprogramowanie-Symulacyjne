@@ -2,6 +2,8 @@
 #include "CapacityExceededException.h"
 #include <iostream>
 #include <cmath>
+#include "../Industry/Mine.h"
+#include "../Industry/Factory.h"
 
 namespace Logistics {
 
@@ -69,6 +71,42 @@ namespace Logistics {
         currentCapacity++;
         std::cout << "Zaladowano surowiec. Aktualny stan ładowni: " 
                   << currentCapacity << "/" << maxCapacity << "\n";
+    }
+
+    void Train::loadFromMine(Industry::Mine& mine) {
+        // Pociąg ładuje tylko wtedy, gdy stoi dokładnie w miejscu kopalni
+        if (getPosition() == mine.getPosition()) {
+            // Ładujemy dopóki pociąg ma miejsce, a kopalnia ma surowce
+            while (currentCapacity < maxCapacity && mine.getOutputBuffer() > 0) {
+                try {
+                    loadResource(); // Wywołanie polimorficzne z komunikatami specyficznymi dla typu pociągu
+                    mine.decreaseOutputBuffer(1); // Pobranie z kopalni
+                }
+                catch (const CapacityExceededException& e) {
+                    break; // Ładownia pełna, przerywamy pętlę bezpiecznie
+                }
+            }
+        }
+    }
+
+    void Train::unloadToFactory(Industry::Factory& factory, bool toBufferB) {
+        // Pociąg rozładowuje surowce tylko na pozycji fabryki
+        if (getPosition() == factory.getPosition()) {
+            int unloadedAmount = 0;
+            while (currentCapacity > 0) {
+                if (toBufferB) {
+                    factory.addInputB(1);
+                } else {
+                    factory.addInputA(1);
+                }
+                currentCapacity--;
+                unloadedAmount++;
+            }
+            if (unloadedAmount > 0) {
+                std::cout << "[Logistics] Rozladowano " << unloadedAmount
+                          << " jednostek surowca w fabryce.\n";
+            }
+        }
     }
 
 } // namespace Logistics

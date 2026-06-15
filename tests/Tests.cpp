@@ -257,3 +257,42 @@ TEST(SimulationEngineTest, TickUpdatesAllRegisteredObjects) {
     EXPECT_TRUE(ptr1->wasUpdated);
     EXPECT_TRUE(ptr2->wasUpdated);
 }
+
+// ==========================================
+// TEST INTEGRACYJNY: PEŁNY ŁAŃCUCH DOSTAW
+// ==========================================
+
+TEST(SupplyChainIntegrationTest, FullExtractionTransportAndProductionCycle) {
+    // 1. Aranżacja: Tworzymy infrastrukturę w tym samym punkcie (X:10, Y:10)
+    Industry::CoalMine mine;
+    Industry::PowerPlant plant;
+    Logistics::MediumTrain train;
+
+    mine.setPosition({10, 10});
+    plant.setPosition({10, 10});
+    train.setPosition({10, 10});
+
+    // 2. Symulacja wydobycia: CoalMine potrzebuje 50 ticków na wykopanie węgla
+    for(int i = 0; i < 60; ++i) {
+        mine.update();
+    }
+    EXPECT_EQ(mine.getOutputBuffer(), 1); // Kopalnia powinna mieć 1 węgiel
+
+    // 3. Symulacja załadunku: Pociąg podjeżdża i pobiera surowiec
+    EXPECT_EQ(train.getCurrentCapacity(), 0);
+    train.loadFromMine(mine);
+
+    EXPECT_EQ(mine.getOutputBuffer(), 0); // Kopalnia oczyszczona
+    EXPECT_EQ(train.getCurrentCapacity(), 1); // Pociąg załadowany
+
+    // 4. Symulacja rozładunku: Pociąg przekazuje węgiel do Elektrowni (Bufor A)
+    EXPECT_EQ(plant.getInputBufferA(), 0);
+    train.unloadToFactory(plant, false); // false = do Bufora A
+
+    EXPECT_EQ(train.getCurrentCapacity(), 0); // Pociąg znowu pusty
+    EXPECT_EQ(plant.getInputBufferA(), 1); // Elektrownia ma węgiel!
+
+    // 5. Symulacja produkcji: Silnik wywołuje update na fabryce, która spala węgiel
+    EXPECT_NO_THROW(plant.update());
+    EXPECT_EQ(plant.getInputBufferA(), 0); // Węgiel został pomyślnie skonsumowany!
+}
