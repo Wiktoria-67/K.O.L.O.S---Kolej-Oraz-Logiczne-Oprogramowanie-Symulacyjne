@@ -27,6 +27,8 @@ set(LIBRARY_SOURCES
     Core/UIElement.h
 
 
+
+
     
     # Moduł Logistics
     Logistics/Train.cpp

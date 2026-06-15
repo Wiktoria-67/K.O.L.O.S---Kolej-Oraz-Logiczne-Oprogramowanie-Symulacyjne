@@ -27,6 +27,7 @@ namespace Logistics {
 
         Core::ResourceType cargoType = Core::ResourceType::Coal; ///Typ przewożonego towaru
 
+
     public:
         virtual ~Train() = default;
 

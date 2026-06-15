@@ -55,7 +55,7 @@ namespace Logistics {
         if (std::abs(dx) <= static_cast<int>(speed) && std::abs(dy) <= static_cast<int>(speed)) {
             setPosition(target);
             currentWaypointIndex++;
-            
+
             std::cout << "[Logistics] Pociag osiagnal wezel trasy (X: "
                       << getPosition().x << ", Y: " << getPosition().y << ").\n";
         } else {
@@ -87,12 +87,15 @@ namespace Logistics {
     }
 
     void Train::loadFromMine(Industry::Mine& mine) {
-        // Pociąg ładuje tylko wtedy, gdy stoi dokładnie w miejscu kopalni
-        if (getPosition() == mine.getPosition()) {
+        // Obliczamy odległość od kopalni
+        int dx = std::abs(getPosition().x - mine.getPosition().x);
+        int dy = std::abs(getPosition().y - mine.getPosition().y);
+        // Hitbox: Pociąg podejmuje akcję tylko, jeśli jest w promieniu 30 pikseli
+        if (dx <= 50 && dy <= 50) {
             // Ładujemy dopóki pociąg ma miejsce, a kopalnia ma surowce
             while (currentCapacity < maxCapacity && mine.getOutputBuffer() > 0) {
                 try {
-                    loadResource(); // Wywołanie polimorficzne z komunikatami specyficznymi dla typu pociągu
+                     loadResource(); // Wywołanie polimorficzne z komunikatami specyficznymi dla typu pociągu
                     mine.decreaseOutputBuffer(1); // Pobranie z kopalni
                 }
                 catch (const CapacityExceededException& e) {
@@ -103,21 +106,24 @@ namespace Logistics {
     }
 
     void Train::unloadToFactory(Industry::Factory& factory, bool toBufferB) {
-        // Pociąg rozładowuje surowce tylko na pozycji fabryki
-        if (getPosition() == factory.getPosition()) {
+        // Obliczamy odległość od fabryki
+        int dx = std::abs(getPosition().x - factory.getPosition().x);
+        int dy = std::abs(getPosition().y - factory.getPosition().y);
+        // Hitbox: Pociąg zrzuca towar tylko, jeśli jest w promieniu 30 pikseli
+        if (dx <= 50 && dy <= 50) {
             int unloadedAmount = 0;
-            while (currentCapacity > 0) {
-                if (toBufferB) {
-                    factory.addInputB(1);
-                } else {
-                    factory.addInputA(1);
+             while (currentCapacity > 0) {
+                  if (toBufferB) {
+                       factory.addInputB(1);
+                 } else {
+                       factory.addInputA(1);
                 }
-                currentCapacity--;
-                unloadedAmount++;
+                  currentCapacity--;
+                 unloadedAmount++;
             }
             if (unloadedAmount > 0) {
                 std::cout << "[Logistics] Rozladowano " << unloadedAmount
-                          << " jednostek surowca w fabryce.\n";
+                             << " jednostek surowca w fabryce.\n";
             }
         }
     }
