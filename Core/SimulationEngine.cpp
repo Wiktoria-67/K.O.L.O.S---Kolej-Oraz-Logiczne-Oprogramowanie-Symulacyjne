@@ -4,10 +4,12 @@
 namespace Core {
 
     SimulationEngine::SimulationEngine() : isRunning(false) {
+        // Inicjalizacja bezpiecznego stanu silnika przed startem pętli
         std::cout << "[System] SimulationEngine zainicjalizowany.\n";
     }
 
     void SimulationEngine::addMapObject(std::unique_ptr<MapObject> obj) {
+        // Przejęcie własności wskaźnika za pomocą std::move
         if (obj) {
             simulationObjects.push_back(std::move(obj));
         }
@@ -20,7 +22,9 @@ namespace Core {
     }
 
     void SimulationEngine::tick() {
-        // Aktualizacja logiki wszystkich dodanych do silnika obiektów
+        /* * Główna pętla logiczna (tzw. Tick).
+         * Iterujemy przez wszystkie obiekty polimorficzne, wywołując ich logikę update().
+         */
         for(auto& obj : simulationObjects) {
             obj->update();
         }

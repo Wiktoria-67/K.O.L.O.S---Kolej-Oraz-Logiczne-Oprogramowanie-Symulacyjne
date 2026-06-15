@@ -11,6 +11,7 @@ namespace Core {
     }
 
     void Button::draw(sf::RenderWindow& window) {
+        // Rysowanie prostokątnego kształtu przycisku z ramką
         sf::RectangleShape rect({static_cast<float>(width), static_cast<float>(height)}); 
         rect.setPosition({static_cast<float>(position.x), static_cast<float>(position.y)});
         rect.setFillColor(buttonColor);
@@ -21,10 +22,12 @@ namespace Core {
     }
 
     bool Button::onClick(int mouseX, int mouseY) {
-        // Sprawdzamy, czy współrzędne myszy zawierają się w prostokącie przycisku
+        /* * Weryfikacja typu AABB (Axis-Aligned Bounding Box).
+         * Sprawdza, czy punkt kliknięcia zawiera się w obszarze przycisku.
+         */
         if (mouseX >= position.x && mouseX <= position.x + width &&
             mouseY >= position.y && mouseY <= position.y + height) {
-            return true; // Kliknięto wewnątrz przycisku!
+            return true;
         }
         return false;
     }

@@ -12,6 +12,7 @@ namespace Core {
     }
 
     void InfoPanel::updateDisplayData() {
+        // Metoda do wywoływania po zmianie stanu symulacji w celu odświeżenia UI
         std::cout << "[InfoPanel] Zaktualizowano statystyki wyswietlania.\n";
     }
 

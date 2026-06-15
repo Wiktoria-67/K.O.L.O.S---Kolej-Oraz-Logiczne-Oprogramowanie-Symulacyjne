@@ -20,7 +20,12 @@ namespace Logistics {
     }
 
     void Train::update() {
-        // Zabezpieczenie: jeśli trasa jest pusta lub dojechaliśmy do końca
+        /* * Główna logika ruchu pociągu:
+         * 1. Pobiera punkt docelowy z trasy.
+         * 2. Porównuje aktualną pozycję z celem (wektor przesunięcia).
+         * 3. Jeśli odległość <= prędkość, "teleportuje" do punktu i przechodzi do kolejnego.
+         * 4. W przeciwnym razie aktualizuje pozycję o wartość wektora prędkości.
+         */
         if (route.isEmpty() || currentWaypointIndex >= route.getWaypoints().size()) {
             return; 
         }
@@ -51,6 +56,7 @@ namespace Logistics {
     }
 
     void Train::loadResource() {
+        // Logika ładowania surowców
         if (currentCapacity >= maxCapacity) {
             throw CapacityExceededException();
         }

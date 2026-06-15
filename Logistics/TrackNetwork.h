@@ -1,14 +1,20 @@
 #pragma once
 #include <vector>
-// Pełny "#include "Train.h"" znajdzie się w pliku TrackNetwork.cpp
+
 namespace Logistics { class Train; } 
 
 namespace Logistics {
 
+    /**
+     * @class TrackNetwork
+     * @brief Centralny system zarządzający infrastrukturą kolejową.
+     * * Nadzoruje aktywne pociągi, wyznacza ich ścieżki i dba o unikanie
+     * kolizji w przestrzeni symulacyjnej.
+     */
     class TrackNetwork {
     private:
-        // Kontener przechowujący wskaźniki na pociągi operujące w sieci
-        std::vector<Train*> activeTrains;
+
+        std::vector<Train*> activeTrains; ///< Wektor wskaźników na pociągi zarejestrowane w sieci.
         
         // Tutaj w przyszłości znajdzie się struktura grafu połączeń (np. wektor węzłów i krawędzi)
         // std::vector<Node> nodes;
@@ -17,14 +23,22 @@ namespace Logistics {
         TrackNetwork() = default;
         ~TrackNetwork() = default;
 
-        // Dodaje pociąg do sieci monitorowanej przez TrackNetwork
+        /**
+         * @brief Rejestruje nowy pociąg w systemie nadzoru.
+         * @param train Wskaźnik na obiekt pociągu. Jeśli nullptr, zostanie zignorowany.
+         */
         void registerTrain(Train* train);
 
-        // Przelicza trasy i aktualizuje ścieżki dla pociągów
+        /**
+         * @brief Przelicza trasy i optymalizuje ścieżki dla zarejestrowanych pociągów.
+         */
         void calculateRoutes();
 
-        // Sprawdza pozycje pociągów pod kątem kolizji.
-        // Jeśli wykryje nakładanie się współrzędnych, rzuca CollisionException.
+        /**
+         * @brief Sprawdza pozycje pociągów pod kątem kolizji przestrzennych.
+         * @return False jeśli nie wykryto kolizji.
+         * @throw CollisionException Jeśli współrzędne dwóch pociągów nałożą się poza stacją.
+         */
         bool checkCollisions();
     };
 

@@ -3,7 +3,6 @@
 #include <memory>
 #include <optional>
 #include <SFML/Graphics.hpp>
-
 #include "Core/Renderer.h"
 #include "Core/Button.h"
 #include "Core/IDrawable.h"
@@ -16,6 +15,8 @@ enum class BuildMode {
     Mine,
     Factory
 };
+
+
 
 int main() {
     std::cout << "==================================================\n";
@@ -101,6 +102,7 @@ int main() {
 
         window.display();
     }
+
 
     return 0;
 }
