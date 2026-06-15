@@ -7,10 +7,9 @@ namespace Industry {
 
     }
 
-    void MachineFactory::processResources() {
-        consumeInputA(1);
-
-        // Logika generowania punktów zwycięstwa / finalnych produktów
-    }
+void MachineFactory::processResources() {
+    consumeInputA(1); 
+    victoryPoints += 50; 
+}
 
 }

@@ -128,4 +128,21 @@ namespace Logistics {
         }
     }
 
+void Train::loadFromFactory(Industry::Factory& factory) {
+        int dx = std::abs(getPosition().x - factory.getPosition().x);
+        int dy = std::abs(getPosition().y - factory.getPosition().y);
+
+        // Hitbox: Pociąg ładuje stal, jeśli jest na stacji
+        if (dx <= 50 && dy <= 50) {
+            while (currentCapacity < maxCapacity && factory.getOutputBuffer() > 0) {
+                try {
+                    loadResource(); 
+                    factory.decreaseOutputBuffer(1); // Zabranie stali z Huty
+                } catch (const CapacityExceededException& e) {
+                    break; 
+                }
+            }
+        }
+    }
+
 } // namespace Logistics

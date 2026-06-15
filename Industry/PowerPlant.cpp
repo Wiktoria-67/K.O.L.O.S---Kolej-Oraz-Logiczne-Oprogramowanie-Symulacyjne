@@ -7,8 +7,9 @@ namespace Industry {
 
     }
 
-    void PowerPlant::processResources() {
-        consumeInputA(1);
-    }
+void PowerPlant::processResources() {
+    consumeInputA(1);
+    generatedEnergy += 10; // Każdy węgiel to +10 Energii
+}
 
 }
