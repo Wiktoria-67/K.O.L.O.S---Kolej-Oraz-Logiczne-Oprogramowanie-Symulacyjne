@@ -35,14 +35,10 @@ set(LIBRARY_SOURCES
     
     # Moduł Logistics
     Logistics/Train.cpp
-    Logistics/SmallTrain.cpp
     Logistics/MediumTrain.cpp
-    Logistics/LargeTrain.cpp
     Logistics/TrackNetwork.cpp
     Logistics/Train.h
-    Logistics/SmallTrain.h
     Logistics/MediumTrain.h
-    Logistics/LargeTrain.h
     Logistics/TrackNetwork.h
     Logistics/CapacityExceededException.h
     Logistics/CollisionException.h
